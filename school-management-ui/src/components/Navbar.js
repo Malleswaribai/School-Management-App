@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // Correct import
+import { useAuth } from "../context/AuthContext";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { isLoggedIn, logout } = useAuth(); // Correctly access 'logout' from context
+  const { isLoggedIn, user, logout } = useAuth(); // Access 'user' from context to determine role
   const navigate = useNavigate();
 
   const handleToggle = () => {
@@ -12,8 +12,58 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
-    await logout(); // Log out the user using the correct logout function
-    navigate("/login"); // Redirect to login page after logout
+    await logout();
+    navigate("/login");
+  };
+
+  const renderLinks = () => {
+    console.log("I am user" , user); 
+    if (!isLoggedIn || !user) return null;
+
+    // Links for both roles
+    const commonLinks = (
+      <>
+        <a
+          href="/profile"
+          className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
+        >
+          Profile
+        </a>
+        <button
+          onClick={handleLogout}
+          className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
+        >
+          Logout
+        </button>
+      </>
+    );
+    if (user.role === "teacher") {
+      return (
+        <>
+          <a
+            href="/classroom-details"
+            className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
+          >
+            Classroom Details
+          </a>
+          {commonLinks}
+        </>
+      );
+    }
+
+    if (user.role === 'student') {
+      return (
+        <>
+          <a
+            href="/pay-fees"
+            className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
+          >
+            Pay Fees
+          </a>
+          {commonLinks}
+        </>
+      );
+    }
   };
 
   return (
@@ -33,17 +83,15 @@ const Navbar = () => {
             </button>
           </div>
           <div className="hidden md:flex items-center space-x-4">
-            {isLoggedIn && (
-              <button
-                onClick={handleLogout}
-                className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
-              >
-                Logout
-              </button>
-            )}
+            {renderLinks()}
           </div>
         </div>
       </div>
+      {isOpen && (
+        <div className="md:hidden px-4 py-3 space-y-2">
+          {renderLinks()}
+        </div>
+      )}
     </nav>
   );
 };
