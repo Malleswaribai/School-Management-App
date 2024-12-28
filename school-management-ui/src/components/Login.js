@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState(""); // New state for role selection
+  const [role, setRole] = useState(""); // Updated for role selection including admin
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -17,7 +17,13 @@ const Login = () => {
       return;
     }
 
-    const loginData = { userName, password, isStudent: role === "student", isTeacher: role === "teacher" };
+    const loginData = {
+      userName,
+      password,
+      isStudent: role === "student",
+      isTeacher: role === "teacher",
+      isAdmin: role === "admin",
+    };
 
     try {
       const response = await fetch("http://localhost:80/login", {
@@ -36,6 +42,12 @@ const Login = () => {
       if (data.success) {
         localStorage.setItem("user", JSON.stringify(data.user));
         login(data.user); // Store the user info in AuthContext
+
+        if(data.isAdmin) {
+          navigate("/admin");
+          return; 
+        }
+
         navigate("/"); // Redirect to dashboard
       } else if (data.userNotFound) {
         alert("User does not exist.");
@@ -107,6 +119,17 @@ const Login = () => {
                   className="form-radio text-blue-600"
                 />
                 <span className="ml-2 text-gray-700">Teacher</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="admin"
+                  checked={role === "admin"}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="form-radio text-blue-600"
+                />
+                <span className="ml-2 text-gray-700">Admin</span>
               </label>
             </div>
           </div>

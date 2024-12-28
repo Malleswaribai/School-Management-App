@@ -17,36 +17,41 @@ const Navbar = () => {
   };
 
   const renderLinks = () => {
-    console.log("I am user" , user); 
     if (!isLoggedIn || !user) return null;
 
     // Links for both roles
     const commonLinks = (
       <>
         <a
+          href="/"
+          className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
+        >
+          Home
+        </a>
+        <a
           href="/profile"
           className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
         >
           Profile
         </a>
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
-        >
-          Logout
-        </button>
       </>
     );
     if (user.role === "teacher") {
       return (
         <>
+          {commonLinks}
           <a
             href="/classroom-details"
             className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
           >
             Classroom Details
           </a>
-          {commonLinks}
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
+          >
+            Logout
+          </button>
         </>
       );
     }
@@ -54,15 +59,27 @@ const Navbar = () => {
     if (user.role === 'student') {
       return (
         <>
+          {commonLinks}
           <a
             href="/pay-fees"
             className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
           >
             Pay Fees
           </a>
-          {commonLinks}
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
+          >
+            Logout
+          </button>
         </>
       );
+    }
+
+    if (user.role === "admin") {
+      return (
+        <></>
+      )
     }
   };
 

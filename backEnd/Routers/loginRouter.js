@@ -7,6 +7,34 @@ router.post('/' , async (req,res) => {
     const user = req.body; 
     const isStudent = user.isStudent , isTeacher = user.isteacher; 
 
+    if (user && user.isAdmin) {
+        if(user.userName === "admin" && user.password === "admin") {
+            res.send({
+                userNotFound : false,
+                invalidPass: false, 
+                success: true, 
+                isAdmin: true, 
+                user:{
+                    name: "admin", 
+                    userName: "admin",
+                    userId: "null",
+                    role: "admin" 
+                }
+            })
+            req.session.user = {
+                isAdmin : true
+            }
+            return;
+        }
+        res.send({
+            userNotFound : false, 
+            invalidPass: true,
+            success: false,
+            user : null
+        })
+        return;
+    }
+
     const scheema = isStudent ? StudentSchema : TeacherSchema; 
 
     const registeredUser = await scheema.findOne({userName: user.userName}) ;
