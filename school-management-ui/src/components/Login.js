@@ -1,32 +1,41 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";  // Import the useAuth hook
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState(""); // New state for role selection
   const navigate = useNavigate();
-
-  // Get the login function from context
-  const { login } = useAuth();  // Use the login function from AuthContext
+  const { login } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    const loginData = { userName, password };
+    if (!role) {
+      alert("Please select your role.");
+      return;
+    }
+
+    const loginData = { userName, password, isStudent: role === "student", isTeacher: role === "teacher" };
 
     try {
-      const response = await fetch("http://localhost/login", {
+      const response = await fetch("http://localhost:80/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),
-        credentials: "include", // Ensure cookies are sent
+        credentials: "include", // Ensure the cookie/session is sent
       });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
 
       const data = await response.json();
 
       if (data.success) {
-        login(data.user); // Use the login function to set the user and login state
+        localStorage.setItem("user", JSON.stringify(data.user));
+        login(data.user); // Store the user info in AuthContext
         navigate("/"); // Redirect to dashboard
       } else if (data.userNotFound) {
         alert("User does not exist.");
@@ -73,6 +82,33 @@ const Login = () => {
               placeholder="Enter your password"
               required
             />
+          </div>
+          <div>
+            <span className="block text-gray-700 font-medium mb-2">Role</span>
+            <div className="flex items-center space-x-4">
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="student"
+                  checked={role === "student"}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="form-radio text-blue-600"
+                />
+                <span className="ml-2 text-gray-700">Student</span>
+              </label>
+              <label className="flex items-center">
+                <input
+                  type="radio"
+                  name="role"
+                  value="teacher"
+                  checked={role === "teacher"}
+                  onChange={(e) => setRole(e.target.value)}
+                  className="form-radio text-blue-600"
+                />
+                <span className="ml-2 text-gray-700">Teacher</span>
+              </label>
+            </div>
           </div>
           <button
             type="submit"

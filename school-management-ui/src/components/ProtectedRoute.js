@@ -1,17 +1,15 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const ProtectedRoute = () => {
-  const { isLoggedIn } = useAuth();
+const ProtectedRoute = ({ element }) => {
+  const { isLoggedIn, loading } = useAuth();
 
-  if (!isLoggedIn) {
-    // Redirect to login page if not logged in
-    return <Navigate to="/login" replace />;
+  if (loading) {
+    return <div>Loading...</div>; // Display a loading spinner or message
   }
 
-  // Render the protected content (e.g., dashboard) if logged in
-  return <Outlet />;
+  return isLoggedIn ? element : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;

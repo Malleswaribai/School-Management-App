@@ -14,7 +14,8 @@ router.post('/' , async (req,res) => {
     const responseObj = {
         userNotFound : false, 
         invalidPass: false,
-        success: true
+        success: true,
+        user : null
     }
     
     if(!registeredUser) {
@@ -25,9 +26,16 @@ router.post('/' , async (req,res) => {
         responseObj.invalidPass = true; 
         responseObj.success = false
     }
+    
 
     if(responseObj.success) {
         req.session.user = registeredUser;
+        responseObj.user = {
+            name: registeredUser.name, 
+            userName: registeredUser.userName,
+            userId: registeredUser._id,
+            role: isStudent ? 'student' : 'teacher' 
+        }
     }
     res.send(responseObj);
 });

@@ -1,12 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Navbar from "./components/Navbar";
 import Login from "./components/Login";
 import Register from "./components/Register";
-import { AuthProvider } from "./context/AuthContext";  // Make sure AuthProvider is used
-import ProtectedRoute from "./components/ProtectedRoute";
+import Dashboard from "./components/Dashboard";
 
-function App() {
+const App = () => {
   return (
     <AuthProvider>
       <Router>
@@ -14,14 +15,12 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          {/* Protected route for dashboard */}
-          <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<div>Welcome to XYZ School Dashboard</div>} />
-          </Route>
+          {/* Protect the dashboard route */}
+          <Route path="/" element={<ProtectedRoute element={<Dashboard />} />} />
         </Routes>
       </Router>
     </AuthProvider>
   );
-}
+};
 
 export default App;

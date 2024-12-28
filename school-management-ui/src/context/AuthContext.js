@@ -1,37 +1,40 @@
-import React, { createContext, useState, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 
-// Create the context
 export const AuthContext = createContext();
 
-// Custom hook to access the AuthContext
 export const useAuth = () => {
   return useContext(AuthContext);
 };
 
-// AuthProvider component
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Login status
-  const [user, setUser] = useState(null); // User details
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // New loading state
 
-  // Login function
+  useEffect(() => {
+    // Simulate retrieving user data from localStorage
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setIsLoggedIn(true);
+      setUser(JSON.parse(storedUser));
+    }
+    setLoading(false); // Authentication check completed
+  }, []);
+
   const login = (userData) => {
     setIsLoggedIn(true);
     setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
   };
 
-  // Logout function
-  const logout = async () => {
-    try {
-      await fetch("http://localhost/logout", { credentials: "include" });
-      setIsLoggedIn(false);
-      setUser(null);
-    } catch (error) {
-      console.error("Error during logout:", error);
-    }
+  const logout = () => {
+    setIsLoggedIn(false);
+    setUser(null);
+    localStorage.removeItem("user");
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
+    <AuthContext.Provider value={{ isLoggedIn, user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
