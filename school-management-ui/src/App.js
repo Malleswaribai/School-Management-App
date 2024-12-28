@@ -11,6 +11,9 @@ import Profile from "./components/Profile";
 import PayFees from "./components/PayFees";
 import AdminProtectedRoute from "./components/Admin/AdminProtectedRoutes";
 import AdminDashboard from "./components/Admin/AdminDashboard";
+import ClassRoomList from "./components/Admin/ClassRoomList";
+import StudentsList from "./components/Admin/StudentList";
+import TeachersList from "./components/Admin/TeachersList";
 
 const App = () => {
   return (
@@ -25,6 +28,11 @@ const App = () => {
         <Route path="/pay-fees" element={<ProtectedRoute element={<PayFees />} />} />
         <Route path="/" element={<ProtectedRoute element={<Dashboard />} />} />
         <Route path="/admin" element={<AdminProtectedRoute element={<AdminDashboard/>}/>} />
+
+        <Route path="/admin/class-rooms" element = { <AdminProtectedRoute element={<ClassRoomList/>} /> } />
+        <Route path="/admin/students" element = { <AdminProtectedRoute element={<StudentsList/>} /> } />
+        <Route path="/admin/teachers" element = { <AdminProtectedRoute element={<TeachersList/>} /> } />
+
       </Routes>
     </Router>
     </AuthProvider>

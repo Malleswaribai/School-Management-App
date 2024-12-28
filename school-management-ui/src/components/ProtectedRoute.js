@@ -9,7 +9,6 @@ const ProtectedRoute = ({ element }) => {
     return <div>Loading...</div>; // Display a loading spinner or message
   }
   if(user.role ==="admin") {
-    alert("Admin can't access this route/n navigate to /admin");
     return <Navigate to = "/admin"/>
   }
   return isLoggedIn ? element : <Navigate to="/login" />;

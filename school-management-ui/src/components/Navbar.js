@@ -36,7 +36,7 @@ const Navbar = () => {
         </a>
       </>
     );
-    if (user.role === "teacher") {
+    if (user && user.role === "teacher") {
       return (
         <>
           {commonLinks}
@@ -56,7 +56,7 @@ const Navbar = () => {
       );
     }
 
-    if (user.role === 'student') {
+    if (user && user.role === 'student') {
       return (
         <>
           {commonLinks}
@@ -76,9 +76,40 @@ const Navbar = () => {
       );
     }
 
-    if (user.role === "admin") {
+    if (user && user.role === "admin") {
       return (
-        <></>
+        <>
+          <a
+            href="/admin/"
+            className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
+          >
+            Dashboard
+          </a>
+          <a
+            href="/admin/class-rooms"
+            className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
+          >
+            Classrooms
+          </a>
+          <a
+            href="/admin/students"
+            className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
+          >
+            Students
+          </a>
+          <a
+            href="/admin/teachers"
+            className="text-white hover:bg-blue-700 py-2 px-4 rounded-md"
+          >
+            Teachers
+          </a>
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700"
+          >
+            Logout
+          </button>
+        </>
       )
     }
   };

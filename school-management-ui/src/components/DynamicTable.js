@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
 
+
+/*
+  This is a table component , This will take input parameter API Which will load the data. 
+*/
+
 const DynamicTable = ({ apiEndpoint }) => {
   const [fields, setFields] = useState([]); // Table columns
   const [rawData, setRawData] = useState([]); // Raw table data

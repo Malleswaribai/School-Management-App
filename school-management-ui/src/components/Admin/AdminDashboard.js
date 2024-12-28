@@ -1,9 +1,7 @@
-import DynamicTable from "../DynamicTable";
-
 const AdminDashboard = () => {
     return (
         <>
-            <DynamicTable apiEndpoint="http://localhost:80/tableData" />
+            <h1>I am admin Dashboard</h1>
         </>
     );
 };
